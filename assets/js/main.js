@@ -615,7 +615,41 @@ function getNow() {
     this.datestamp = date;
 	const prayer = PT.nextPrayer();
 	const formatedPrayer = prayer.charAt(0).toUpperCase() + prayer.slice(1);
+
+	var timeParts = times[PT.nextPrayer()].split(":");
+	var _hours = parseInt(timeParts[0]);
+	var _minutes = parseInt(timeParts[1].split(" ")[0]);
+	var period = timeParts[1].split(" ")[1];
+
+	if (period === "pm" && _hours < 12) {
+		_hours += 12;
+	} else if (period === "am" && _hours === 12) {
+		_hours = 0;
+	}
+
+	var _date = new Date();
+	_date.setHours(_hours);
+	_date.setMinutes(_minutes);
+
+
+	_date.setMinutes(_date.getMinutes() + 15);
+		// Format the final date into "Hours:Minutes AM/PM" format
+	var finalHours = _date.getHours();
+	var finalMinutes = _date.getMinutes();
+	var finalPeriod = finalHours >= 12 ? "pm" : "am";
+
+	// Convert to 12-hour format
+	finalHours = finalHours % 12;
+	finalHours = finalHours ? finalHours : 12; // 12 should be displayed as 12, not 0
+
+	// Add leading zero if necessary
+	finalMinutes = finalMinutes < 10 ? "0" + finalMinutes : finalMinutes;
+
+	// Construct the final string
+	var finalTimeString = finalHours + ":" + finalMinutes + " " + finalPeriod;
 	document.getElementById("cur_pray").innerHTML = formatedPrayer + " at " + times[PT.nextPrayer()];
+
+	document.getElementById("sala").innerHTML = formatedPrayer + " at " + finalTimeString;
     document.getElementById("timestamp").innerHTML = this.timestamp;
     document.getElementById("datestamp").innerHTML = this.datestamp;
 	
