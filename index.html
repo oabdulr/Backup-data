@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto" />
+<link rel="stylesheet" href="./assets/css/main.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="./assets/js/main.js"></script>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div class="flex justify-center items-center pt-4"> <!-- Adjusted padding top -->
+      <div class="text-center">
+        <h1 class="dark:text-slate-100 font-bold text-sm/[67%] font-roboto" id="datestamp">Loading ...</h1>
+        <h1 class="dark:text-slate-100 font-bold text-7xl font-roboto pt-2" id="timestamp">Loading ...</h1>
+      </div>
+    </div>
+
+    <div class="flex justify-center items-center pt-[6%]"> <!-- Adjusted margin top -->
+      <div class="text-center">
+        <h1 class="dark:text-slate-300 font-bold text-5xl font-roboto">Next Prayer</h1> <!-- Adjusted margin top -->
+        <h1 class="dark:text-slate-100 font-bold text-5xl font-roboto" id="cur_pray">Loading ...</h1>
+		
+		<div class = "rounded-lg text-justify pt-[50%]">
+			<h1 class="text-center dark:text-slate-300 font-bold text-5xl font-roboto pb-5">Athan Times</h1> <!-- Adjusted margin top -->
+			
+			<table class="table-fixed rounded-full">
+			<div class="rounded-lg relative overflow-x-auto shadow-md sm:rounded-lg">
+				<table class="rounded-lg w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+					<thead class="rounded-lg text-xs text-gray-700 uppercase dark:text-gray-400">
+						<tr>
+							<th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+								Athan
+							</th>
+							<th scope="col" class="px-6 py-3">
+								Time
+							</th>
+						</tr>
+					</thead>
+					<tbody class = "rounded-lg">
+						<tr class="border-b border-gray-200 dark:border-gray-700">
+							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+								Fajr
+							</th>
+							<td class="px-6 py-4" id = "fajrT">
+								Loading ...
+							</td>
+						</tr>
+						<tr class="border-b border-gray-200 dark:border-gray-700">
+							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+								Dhuhr
+							</th>
+							<td class="px-6 py-4" id = "dthT">
+								Loading ...
+							</td>
+						</tr>
+						<tr class="border-b border-gray-200 dark:border-gray-700">
+							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+								Asr
+							</th>
+							<td class="px-6 py-4" id = "asrT">
+								Loading ...
+							</td>
+						</tr>
+						<tr class="border-b border-gray-200 dark:border-gray-700">
+							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+								Maghrib
+							</th>
+							<td class="px-6 py-4" id = "magT">
+								Loading ...
+							</td>
+						</tr>
+						<tr>
+							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+								Isha
+							</th>
+							<td class="px-6 py-4" id = "ishaT">
+								Loading ...
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+		</div>
+      </div>
+    </div> 
+  </body>
+</html>
