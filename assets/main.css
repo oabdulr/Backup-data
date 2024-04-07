@@ -1,0 +1,7 @@
+html, body {
+  background-color: #131313;
+}
+
+body {
+  overflow: hidden; /* Hide scrollbars */
+}
