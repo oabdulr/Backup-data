@@ -601,6 +601,15 @@ var DMath = {
 
 function getNow() {
     const today = new Date();
+	var d = new Date();
+	var daysToAdd = 5 - d.getDay(); // Calculate how many days until Friday (Friday is the 5th day of the week, where Sunday is 0 and Saturday is 6)
+	if (daysToAdd <= 0) {
+		daysToAdd += 7; // If today is Friday or later, move to next week's Friday
+	}
+	d.setDate(d.getDate() + daysToAdd);
+	var F_PT = new PrayTimes('ISNA');
+	var F_times = F_PT.getTimes(d, [35.227, -80.843], -5);
+
 	var PT = new PrayTimes('ISNA');
 	var times = PT.getTimes(today, [35.227, -80.843], -5);
     const date = today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate();
@@ -657,8 +666,8 @@ function getNow() {
 	document.getElementById("dthT").innerHTML = times["dhuhr"];
 	document.getElementById("asrT").innerHTML = times["asr"];
 	document.getElementById("magT").innerHTML = times["maghrib"];
-	document.getElementById("ishaT").innerHTML = times["isha"];;
-
+	document.getElementById("ishaT").innerHTML = times["isha"];
+	
 	return;
 }
 
