@@ -260,18 +260,25 @@ function PrayTimes(method) {
 		this.times_raw = data[1];
 		return data[0];
 	},
+	
+	
 
 	nextPrayer: function(){
 		const date = new Date();
 		var hour = date.getHours();
 		var min = date.getMinutes();
-		var prev_time = "fajr";
+
 		for (var i in this.times_raw){
-			var time = this.times_raw[i]
-			if (Number(time.split(":")[0]) > hour && Number(time.split(":")[1]) > min ){
-				return prev_time;
+			if (i === "imsak" || i === "sunrise" || i === "sunset"){
+				continue;
 			}
-			var prev_time = i
+
+			var time = this.times_raw[i]
+			if (Number(time.split(":")[0]) > hour){
+				return i;
+			}else if (Number(time.split(":")[0]) == hour && time.split(":")[1] >= min){
+				return i;
+			}
 		}
 
 		return "fajr";
@@ -607,11 +614,18 @@ function getNow() {
 		daysToAdd += 7; // If today is Friday or later, move to next week's Friday
 	}
 	d.setDate(d.getDate() + daysToAdd);
+	
 	var F_PT = new PrayTimes('ISNA');
 	var F_times = F_PT.getTimes(d, [35.227, -80.843], -5);
 
+	var tmr = new Date();
+	tmr.setDate(tmr.getDate() + 1);
+	var tmr_PT = new PrayTimes('ISNA');
+	var tmr_times = tmr_PT.getTimes(tmr, [35.227, -80.843], -5);
+
 	var PT = new PrayTimes('ISNA');
 	var times = PT.getTimes(today, [35.227, -80.843], -5);
+	
     const date = today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate();
     let hours = today.getHours();
     const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -622,10 +636,27 @@ function getNow() {
     const time = hours + ":" + minutes + ":" + seconds + " " + ampm;
     this.timestamp = time;
     this.datestamp = date;
-	const prayer = PT.nextPrayer();
-	const formatedPrayer = prayer.charAt(0).toUpperCase() + prayer.slice(1);
+	
+	const next_p = PT.nextPrayer();
+	var prayer = times[next_p];
+	const formatedPrayer = next_p.charAt(0).toUpperCase() + next_p.slice(1);
 
-	var timeParts = times[PT.nextPrayer()].split(":");
+	
+	var hour_ = today.getHours();
+	var min_ = today.getMinutes();
+	var isha_date = new Date(today);
+	isha_date.setHours(Number(PT.times_raw["isha"].split(":")[0]));
+	isha_date.setMinutes(Number(PT.times_raw["isha"].split(":")[1]));
+	if (next_p === "fajr" && isha_date > today){
+			document.getElementById("cur_pray").innerHTML = formatedPrayer + " at " + times[next_p];
+		}else{
+			document.getElementById("cur_pray").innerHTML = formatedPrayer + " at " + tmr_times[next_p];
+			prayer = tmr_times[next_p];
+		}
+		
+		
+
+	var timeParts = prayer.split(":");
 	var _hours = parseInt(timeParts[0]);
 	var _minutes = parseInt(timeParts[1].split(" ")[0]);
 	var period = timeParts[1].split(" ")[1];
@@ -656,8 +687,7 @@ function getNow() {
 
 	// Construct the final string
 	var finalTimeString = finalHours + ":" + finalMinutes + " " + finalPeriod;
-	document.getElementById("cur_pray").innerHTML = formatedPrayer + " at " + times[PT.nextPrayer()];
-
+		
 	document.getElementById("sala").innerHTML = formatedPrayer + " at " + finalTimeString;
     document.getElementById("timestamp").innerHTML = this.timestamp;
     document.getElementById("datestamp").innerHTML = this.datestamp;
