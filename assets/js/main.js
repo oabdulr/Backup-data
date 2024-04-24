@@ -688,7 +688,7 @@ function getNow() {
 	// Construct the final string
 	var finalTimeString = finalHours + ":" + finalMinutes + " " + finalPeriod;
 		
-	document.getElementById("sala").innerHTML = formatedPrayer + " at " + finalTimeString;
+	//document.getElementById("sala").innerHTML = formatedPrayer + " at " + finalTimeString;
     document.getElementById("timestamp").innerHTML = this.timestamp;
     document.getElementById("datestamp").innerHTML = this.datestamp;
 	
@@ -696,6 +696,7 @@ function getNow() {
 	document.getElementById("dthT").innerHTML = times["dhuhr"];
 	document.getElementById("asrT").innerHTML = times["asr"];
 	document.getElementById("magT").innerHTML = times["maghrib"];
+	document.getElementById("magIq").innerHTML = times["maghrib"];
 	document.getElementById("ishaT").innerHTML = times["isha"];
 	
 	return;
