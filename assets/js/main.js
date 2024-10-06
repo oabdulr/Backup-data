@@ -693,6 +693,7 @@ function getNow() {
     document.getElementById("datestamp").innerHTML = this.datestamp;
 	
 	document.getElementById("fajrT").innerHTML = times["fajr"];
+	document.getElementById("sunruseT").innerHTML = times["sunrise"];
 	document.getElementById("dthT").innerHTML = times["dhuhr"];
 	document.getElementById("asrT").innerHTML = times["asr"];
 	document.getElementById("magT").innerHTML = times["maghrib"];
