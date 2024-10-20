@@ -689,7 +689,7 @@ function getNow() {
 	var finalTimeString = finalHours + ":" + finalMinutes + " " + finalPeriod;
 		
 	//document.getElementById("sala").innerHTML = formatedPrayer + " at " + finalTimeString;
-    document.getElementById("timestamp").innerHTML = this.timestamp;
+    //document.getElementById("timestamp").innerHTML = this.timestamp;
     document.getElementById("datestamp").innerHTML = this.datestamp;
 	
 	document.getElementById("fajrT").innerHTML = times["fajr"];
