@@ -648,9 +648,9 @@ function getNow() {
 	isha_date.setHours(Number(PT.times_raw["isha"].split(":")[0]));
 	isha_date.setMinutes(Number(PT.times_raw["isha"].split(":")[1]));
 	if (next_p === "fajr" && isha_date > today){
-			document.getElementById("cur_pray").innerHTML = formatedPrayer + " at " + times[next_p];
+			document.getElementById("cur_pray").innerHTML = formatedPrayer + "&nbsp;" + times[next_p];
 		}else{
-			document.getElementById("cur_pray").innerHTML = formatedPrayer + " at " + tmr_times[next_p];
+			document.getElementById("cur_pray").innerHTML = formatedPrayer + "&nbsp;" + tmr_times[next_p];
 			prayer = tmr_times[next_p];
 		}
 		
