@@ -1,159 +1,60 @@
 <!DOCTYPE html>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto" />
-<link rel="stylesheet" href="./assets/css/main.css">
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="./assets/js/main.js"></script>
-
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-  <body>
-    <div class="flex justify-center items-center pt-4"> <!-- Adjusted padding top -->
-      <div class="text-center">
-        <h1 class="text-slate-100 font-bold text-4xl font-roboto" id="datestamp">Loading ...</h1>
-        <h1 class="text-slate-100 font-bold text-7xl font-roboto pt-2" id="timestamp">Loading ...</h1>
-      </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./assets/css/main.css">
+  <script src="./assets/js/main.js"></script>
+</head>
+<body class="flex flex-col items-center justify-center h-screen text-white font-roboto">
+  <div class="text-center mt-4 mb-6">
+    <h1 class="text-4xl font-bold">Concord</h1>
+    <h2 class="text-3xl">UMCC</h2>
+  </div>
+  
+    <div class="mt-12 text-center mb-6">
+    <h1 class="text-2xl font-bold text-slate-400">Time</h1>
+    <h1 class="text-5xl" id="timestamp">Loading ...</h1>
+  </div>
+  
+  <div class="mt-12 text-center mb-6">
+    <h1 class="text-3xl font-bold text-slate-400">Next Prayer</h1>
+    <h1 class="text-7xl" id="cur_pray">Loading ...</h1>
+    <h2 class="text-3xl mt-3" id="datestamp">Loading ...</h2>
+  </div>
+  
+  <div class="flex justify-around mt-12 w-full max-w-7xl">
+    <div class="text-center flex-grow">
+      <h2 class="text-3xl font-bold">Fajr</h2>
+      <p class="text-5xl font-bold" id="fajrT">Loading ...</p>
+      <p class="text-2xl font-bold text-gray-400">1:30 pm</p>
     </div>
-
-	 <div class="flex justify-center items-center pt-[6%]"> <!-- Adjusted margin top -->
-	  <div class="text-center">
-        <h1 class="text-slate-300 font-bold text-5xl font-roboto">Next Prayer</h1> <!-- Adjusted margin top -->
-        <h1 class="text-slate-100 font-bold text-5xl font-roboto" id="cur_pray">Loading ...</h1>
-	  </div>
-	
-    <!--  <div class="text-center pl-[10%]">
-        <h1 class="text-slate-300 font-bold text-5xl font-roboto">Iqamah</h1> <!-- Adjusted margin top 
-        <h1 class="text-slate-100 font-bold text-5xl font-roboto" id="sala">Loading ...</h1>
-      </div>-->
-	 </div>
-	
-	 
-
-    <div class="flex justify-center  pt-[1%]"> <!-- Adjusted margin top -->
-		<div class = "rounded-lg text-justify">			
-			<table class="table-fixed rounded-full">
-			<div class="rounded-lg relative overflow-x-auto shadow-md sm:rounded-lg">
-				<h1 class="pb-[4%] flex justify-center items-center text-slate-200 font-bold text-5xl font-roboto">Athan</h1> <!-- Adjusted margin top -->
-				<table class="rounded-lg w-full text-2xl text-left rtl:text-right text-gray-500 text-gray-400">
-					<thead class="rounded-lg text-xl text-gray-700 uppercase text-gray-400">
-						<tr>
-							<th scope="col" class="text-slate-400 px-6 py-3 bg-gray-50 bg-gray-800">
-								Athan
-							</th>
-							<th scope="col" class="text-slate-400 px-6 py-3 bg-[#131313]">
-								Time
-							</th>
-							<th scope="col" class="text-slate-400 px-6 py-3 bg-[#131313]">
-								Iqamah
-							</th>
-						</tr>
-					</thead>
-					<tbody class = "rounded-lg">
-						<tr class="border-b border-gray-200 border-gray-700">
-							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 text-white bg-gray-800">
-								Fajr
-							</th>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "fajrT">
-								Loading ...
-							</td>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "fajrIq">
-								6:30 am
-							</td>
-						</tr>
-						<tr class="border-b border-gray-200 border-gray-700">
-							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 text-white bg-gray-800">
-								Sunrise
-							</th>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "sunruseT">
-								Loading ...
-							</td>
-						</tr>
-						<tr class="border-b border-gray-200 border-gray-700">
-							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 text-white bg-gray-800">
-								Dhuhr
-							</th>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "dthT">
-								Loading ...
-							</td>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "dthIq">
-								1:30 pm
-							</td>
-						</tr>
-						<tr class="border-b border-gray-200 border-gray-700">
-							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 text-white bg-gray-800">
-								Asr
-							</th>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "asrT">
-								Loading ...
-							</td>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "asrIq">
-								5:00 pm
-							</td>
-						</tr>
-						<tr class="border-b border-gray-200 border-gray-700">
-							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 text-white bg-gray-800">
-								Maghrib
-							</th>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "magT">
-								Loading ...
-							</td>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "magIq">
-								Loading ...
-							</td>
-						</tr>
-						<tr>
-							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 text-white bg-gray-800">
-								Isha
-							</th>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "ishaT">
-								Loading ...
-							</td>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "ishaIq">
-								8:30 pm
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="pl-[10%] rounded-lg relative overflow-x-auto shadow-md sm:rounded-lg">
-				<h1 class="pb-[5%] flex justify-center items-center text-slate-200 font-bold text-5xl font-roboto">Friday</h1> <!-- Adjusted margin top -->
-				<table class="rounded-lg w-full text-2xl text-left rtl:text-right text-gray-500 text-gray-400">
-					<thead class="rounded-lg text-xl text-gray-700 uppercase text-gray-400">
-						<tr>
-							<th scope="col" class="text-slate-400 px-6 py-3 bg-gray-800">
-								Khutba
-							</th>
-							<th scope="col " class="text-slate-400 px-6 py-3 bg-[#131313]">
-								Time
-							</th>
-						</tr>
-					</thead>
-					<tbody class = "rounded-lg">
-						<tr class="border-b border-gray-200 border-gray-700">
-							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 text-white bg-gray-800">
-								First
-							</th>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "firstKhutba">
-								1:15 pm
-							</td>
-						</tr>
-						<tr class="border-b border-gray-200 border-gray-700">
-							<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 text-white bg-gray-800">
-								Second
-							</th>
-							<td class="px-6 py-4 text-slate-200 bg-[#131313]" id = "secondKhutba">
-								2:00 pm
-							</td>
-						</tr>
-						
-					</tbody>
-				</table>
-			</div>
-			
-		</div>
-      </div>
-    </div> 
-  </body>
+    <div class="text-center flex-grow">
+      <h2 class="text-3xl font-bold text-orange-500">Sunrise</h2>
+      <p class="text-5xl font-bold text-orange-500" id="sunruseT">Loading ...</p>
+    </div>
+    <div class="text-center flex-grow">
+      <h2 class="text-3xl font-bold">Zuhr</h2>
+      <p class="text-5xl font-bold" id="dthT">Loading ...</p>
+      <p class="text-2xl font-bold text-gray-400">1:30 pm</p>
+    </div>
+    <div class="text-center flex-grow">
+      <h2 class="text-3xl font-bold">Asr</h2>
+      <p class="text-5xl font-bold" id="asrT">Loading ...</p>
+      <p class="text-2xl font-bold text-gray-400">4:40 pm</p>
+    </div>
+    <div class="text-center flex-grow">
+      <h2 class="text-3xl font-bold">Maghrib</h2>
+      <p class="text-5xl font-bold" id="magT">Loading ...</p>
+      <p class="text-2xl font-bold text-gray-400" id="magIq" >Loading ...</p>
+    </div>
+    <div class="text-center flex-grow">
+      <h2 class="text-3xl font-bold">Isha</h2>
+      <p class="text-5xl font-bold" id="ishaT">Loading ...</p>
+      <p class="text-2xl font-bold text-gray-400">8:15 pm</p>
+    </div>
+  </div>
+</body>
 </html>
