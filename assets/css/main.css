@@ -1,5 +1,6 @@
 html, body {
-  background-color: #090909;
+   transform: scale(1.1);
+   background-color: #090909;
 }
 
 body {
