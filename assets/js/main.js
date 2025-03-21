@@ -74,7 +74,7 @@ function PrayTimes(method) {
 		imsak    : 'Imsak',
 		fajr     : 'Fajr',
 		sunrise  : 'Sunrise',
-		dhuhr    : 'Dhuhr',
+		dhuhr    : 'Zuhr',
 		asr      : 'Asr',
 		sunset   : 'Sunset',
 		maghrib  : 'Maghrib',
