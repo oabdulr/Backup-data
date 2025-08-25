@@ -154,7 +154,7 @@ function PrayTimes(method) {
 
 	//---------------------- Default Settings --------------------
 
-	calcMethod = 'Makkah',
+	calcMethod = 'MWL',
 
 	// do not change anything here; use adjust method instead
 	setting = {
@@ -615,15 +615,15 @@ function getNow() {
 	}
 	d.setDate(d.getDate() + daysToAdd);
 	
-	var F_PT = new PrayTimes('ISNA');
+	var F_PT = new PrayTimes('Makkah');
 	var F_times = F_PT.getTimes(d, [35.227, -80.843], -5);
 
 	var tmr = new Date();
 	tmr.setDate(tmr.getDate() + 1);
-	var tmr_PT = new PrayTimes('ISNA');
+	var tmr_PT = new PrayTimes('Makkah');
 	var tmr_times = tmr_PT.getTimes(tmr, [35.227, -80.843], -5);
 
-	var PT = new PrayTimes('ISNA');
+	var PT = new PrayTimes('Makkah');
 	var times = PT.getTimes(today, [35.227, -80.843], -5);
 	
     const date = today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate();
