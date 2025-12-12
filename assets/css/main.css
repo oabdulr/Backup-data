@@ -6,53 +6,77 @@
   font-family: 'Lato', sans-serif;
 }
 
+/* Custom Colors for "Nature Green" Theme */
+.bg-nature-dark {
+  background-color: #021a12; /* Very dark pine green */
+}
+.bg-nature-darker {
+  background-color: #01110b;
+}
+.text-nature-light {
+  color: #d1fae5;
+}
+
 /* Base resets */
 html, body {
-  background-color: #0f172a; /* Fallback */
+  background: radial-gradient(circle at top right, #064e3b 0%, #022c22 40%, #01130d 100%);
   -webkit-font-smoothing: antialiased;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 /* Glassmorphism Panels */
 .glass-panel {
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
 /* Prayer Card Base Style */
 .prayer-card {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.02);
 }
 
 /* Active Prayer Highlight Style */
 .prayer-card.active-prayer {
-  background: rgba(16, 185, 129, 0.2); /* Emerald tint */
-  border-color: rgba(52, 211, 153, 0.5);
-  box-shadow: 0 0 30px rgba(16, 185, 129, 0.1);
+  background: linear-gradient(90deg, rgba(5, 150, 105, 0.25) 0%, rgba(6, 78, 59, 0.7) 100%);
+  border: 2px solid rgba(52, 211, 153, 0.6);
+  box-shadow: 0 0 60px rgba(16, 185, 129, 0.15);
   transform: scale(1.02);
+  z-index: 10;
 }
 
-.prayer-card.active-prayer .text-slate-400 {
-  color: #a7f3d0; /* Light emerald for secondary text */
+.prayer-card.active-prayer .text-emerald-400\/40 {
+  color: #ffffff;
+  opacity: 1;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.prayer-card.active-prayer .text-emerald-50 {
+  color: #34d399; /* Bright Emerald text */
+  text-shadow: 0 0 15px rgba(52, 211, 153, 0.6);
 }
 
 /* Animations */
 @keyframes fadeInRight {
-  from { opacity: 0; transform: translateX(20px); }
+  from { opacity: 0; transform: translateX(50px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes fadeInLeft {
-  from { opacity: 0; transform: translateX(-20px); }
+  from { opacity: 0; transform: translateX(-50px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
 .animate-fade-in-left {
-  animation: fadeInLeft 1s ease-out forwards;
+  animation: fadeInLeft 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-fade-in-right {
-  animation: fadeInRight 1s ease-out forwards;
-  animation-delay: 0.2s;
-  opacity: 0; /* Start hidden for delay */
+  animation: fadeInRight 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.15s;
+  opacity: 0;
 }
