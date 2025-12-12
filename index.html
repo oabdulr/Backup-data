@@ -35,8 +35,8 @@
 
   <!-- ================= DECORATIONS ================= -->
   
-  <!-- Corner Ornament: Top Left -->
-  <div class="absolute top-0 left-0 w-32 h-32 lg:w-64 lg:h-64 pointer-events-none opacity-30 z-0">
+  <!-- Corner Ornament: Top Left (Changed to FIXED) -->
+  <div class="fixed top-0 left-0 w-32 h-32 lg:w-64 lg:h-64 pointer-events-none opacity-30 z-0">
     <svg viewBox="0 0 100 100" fill="none" stroke="#A7F3D0" stroke-width="1" class="w-full h-full">
       <path d="M0 0 L40 0 Q60 0 60 20 L60 40 Q60 60 40 60 L20 60 Q0 60 0 80 Z" stroke="none" fill="url(#grad1)"/>
       <path d="M5 5 L95 5 M5 5 L5 95" stroke-opacity="0.5" />
@@ -51,10 +51,17 @@
     </svg>
   </div>
 
-  <!-- Corner Ornament: Bottom Right -->
-  <div class="absolute bottom-0 right-0 w-32 h-32 lg:w-64 lg:h-64 pointer-events-none opacity-30 z-0 rotate-180">
+  <!-- Corner Ornament: Bottom Right (Changed to FIXED) -->
+  <div class="fixed bottom-0 right-0 w-32 h-32 lg:w-64 lg:h-64 pointer-events-none opacity-30 z-0 rotate-180">
     <svg viewBox="0 0 100 100" fill="none" stroke="#A7F3D0" stroke-width="1" class="w-full h-full">
-      <path d="M0 0 L40 0 Q60 0 60 20 L60 40 Q60 60 40 60 L20 60 Q0 60 0 80 Z" stroke="none" fill="url(#grad1)"/>
+      <!-- Duplicated defs to ensure gradient renders correctly in all browsers -->
+      <defs>
+        <linearGradient id="grad1-bottom" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#34D399;stop-opacity:0.2" />
+          <stop offset="100%" style="stop-color:#064E3B;stop-opacity:0" />
+        </linearGradient>
+      </defs>
+      <path d="M0 0 L40 0 Q60 0 60 20 L60 40 Q60 60 40 60 L20 60 Q0 60 0 80 Z" stroke="none" fill="url(#grad1-bottom)"/>
       <path d="M5 5 L95 5 M5 5 L5 95" stroke-opacity="0.5" />
       <path d="M15 15 L85 15 M15 15 L15 85" stroke-opacity="0.3" />
       <circle cx="15" cy="15" r="3" fill="#A7F3D0" />
@@ -149,7 +156,7 @@
           <div id="row-fajr" class="prayer-card grid grid-cols-3 items-center px-4 lg:px-8 py-4 lg:py-6 rounded-2xl border border-transparent transition-all duration-500 group">
             <div class="text-2xl lg:text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Fajr</div>
             <div id="fajrT" class="text-2xl lg:text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div id="fajrIq" class="text-3xl lg:text-5xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">6:15</div>
+            <div id="fajrIq" class="text-3xl lg:text-6xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">6:15</div>
           </div>
 
           <!-- Sunrise -->
@@ -163,28 +170,28 @@
           <div id="row-dhuhr" class="prayer-card grid grid-cols-3 items-center px-4 lg:px-8 py-4 lg:py-6 rounded-2xl border border-transparent transition-all duration-500 group">
             <div class="text-2xl lg:text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Zuhr</div>
             <div id="dthT" class="text-2xl lg:text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div id="dhuhrIq" class="text-3xl lg:text-5xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">12:30</div>
+            <div id="dhuhrIq" class="text-3xl lg:text-6xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">12:30</div>
           </div>
 
           <!-- Asr -->
           <div id="row-asr" class="prayer-card grid grid-cols-3 items-center px-4 lg:px-8 py-4 lg:py-6 rounded-2xl border border-transparent transition-all duration-500 group">
             <div class="text-2xl lg:text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Asr</div>
             <div id="asrT" class="text-2xl lg:text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div id="asrIq" class="text-3xl lg:text-5xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">3:00</div>
+            <div id="asrIq" class="text-3xl lg:text-6xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">3:00</div>
           </div>
 
           <!-- Maghrib -->
           <div id="row-maghrib" class="prayer-card grid grid-cols-3 items-center px-4 lg:px-8 py-4 lg:py-6 rounded-2xl border border-transparent transition-all duration-500 group">
             <div class="text-2xl lg:text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Maghrib</div>
             <div id="magT" class="text-2xl lg:text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div id="magIq" class="text-3xl lg:text-5xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">--:--</div>
+            <div id="magIq" class="text-3xl lg:text-6xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">--:--</div>
           </div>
 
           <!-- Isha -->
           <div id="row-isha" class="prayer-card grid grid-cols-3 items-center px-4 lg:px-8 py-4 lg:py-6 rounded-2xl border border-transparent transition-all duration-500 group">
             <div class="text-2xl lg:text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Isha</div>
             <div id="ishaT" class="text-2xl lg:text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div id="ishaIq" class="text-3xl lg:text-5xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">7:15</div>
+            <div id="ishaIq" class="text-3xl lg:text-6xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">7:15</div>
           </div>
 
         </div>
