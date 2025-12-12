@@ -3,66 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+  <title>Mosque Prayer Display</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  
   <script src="https://cdn.tailwindcss.com"></script>
+  
   <link rel="stylesheet" href="./assets/css/main.css">
-  <script src="./assets/js/main.js"></script>
+  
+  <script src="./assets/js/main.js" defer></script>
 </head>
-<body class="flex flex-col items-center justify-center h-screen text-white font-roboto relative">
-  
-  <div class="absolute top-0 left-0 mt-4 ml-4 text-left">
-    <h1 class="text-4xl font-bold">Concord</h1>
-    <h1 class="text-5xl font-semibold" id="timestamp">Loading ...</h1>
-    <h2 class="text-3xl">UMCC</h2>
-  </div>
-  
-  <div class="mb-20 text-center max-w-4xl mx-auto">
-    <h1 class="text-7xl" id="cur_pray">Loading ...</h1>
-    <h2 class="text-4xl mt-3" id="datestamp">Loading ...</h2>
-  </div>
-  
-  <div class="flex justify-around mt-5 w-full max-w-7xl mx-auto">
-    <div class="text-center flex-grow">
-      <h2 class="text-3xl font-bold">Fajr</h2>
-      <p class="text-5xl font-bold" id="fajrT">Loading ...</p>
-      <p class="text-4xl font-bold text-gray-400">6:15 am</p>
-    </div>
-    <div class="text-center flex-grow">
-      <h2 class="text-3xl font-bold text-orange-500">Sunrise</h2>
-      <p class="text-5xl font-bold text-orange-500" id="sunruseT">Loading ...</p>
-    </div>
-    <div class="text-center flex-grow">
-      <h2 class="text-3xl font-bold">Zuhr</h2>
-      <p class="text-5xl font-bold" id="dthT">Loading ...</p>
-      <p class="text-4xl font-bold text-gray-400">12:30 pm</p>
-    </div>
-    <div class="text-center flex-grow">
-      <h2 class="text-3xl font-bold">Asr</h2>
-      <p class="text-5xl font-bold" id="asrT">Loading ...</p>
-      <p class="text-4xl font-bold text-gray-400">3:00 pm</p>
-    </div>
-    <div class="text-center flex-grow">
-      <h2 class="text-3xl font-bold">Maghrib</h2>
-      <p class="text-5xl font-bold" id="magT">Loading ...</p>
-      <p class="text-4xl font-bold text-gray-400" id="magIq">Loading ...</p>
-    </div>
-    <div class="text-center flex-grow">
-      <h2 class="text-3xl font-bold">Isha</h2>
-      <p class="text-5xl font-bold" id="ishaT">Loading ...</p>
-      <p class="text-4xl font-bold text-gray-400">7:15 pm</p>
-    </div>
-  </div>
-  
-  <div class="flex justify-around mt-36 w-full max-w-3xl mx-auto">
-    <div class="text-center flex-grow">
-      <h2 class="text-3xl font-bold text-blue-200">Jumu'ah I</h2>
-      <p class="text-5xl font-bold text-blue-200">12:15 pm</p>
-    </div>
-    <div class="text-center flex-grow">
-      <h2 class="text-3xl font-bold text-blue-200">Jumu'ah II</h2>
-      <p class="text-5xl font-bold text-blue-200">1:00 pm</p>
-    </div>
-  </div>
-  
+<body class="h-screen w-screen overflow-hidden bg-slate-900 text-white font-body selection:bg-emerald-500 selection:text-white">
+
+  <div class="fixed inset-0 -z-10 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950"></div>
+  <div class="fixed inset-0 -z-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+
+  <main class="flex h-full w-full p-8 gap-8">
+    
+    <section class="w-1/3 flex flex-col justify-between animate-fade-in-left">
+      
+      <div>
+        <h2 class="text-2xl font-light tracking-widest uppercase text-emerald-400">Welcome to</h2>
+        <h1 class="text-6xl font-header font-extrabold mt-2 leading-tight">Concord<br>UMCC</h1>
+      </div>
+
+      <div class="glass-panel p-8 rounded-3xl text-center shadow-2xl border border-white/10">
+        <h3 class="text-xl uppercase tracking-widest text-slate-400 mb-2">Current Time</h3>
+        <div id="timestamp" class="text-6xl font-header font-bold text-white mb-2 tracking-wide">--:-- --</div>
+        <div id="datestamp" class="text-xl text-emerald-300 font-medium">Loading Date...</div>
+        
+        <div class="w-full h-px bg-white/10 my-8"></div>
+        
+        <h3 class="text-lg uppercase tracking-widest text-slate-400 mb-4">Next Prayer</h3>
+        <div id="cur_pray" class="text-5xl font-header font-bold text-emerald-400 drop-shadow-lg">Loading...</div>
+      </div>
+
+      <div class="glass-panel p-6 rounded-2xl border border-white/5">
+        <h3 class="text-center text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">Jumu'ah Schedule</h3>
+        <div class="flex justify-between items-center px-4">
+          <div class="text-center">
+            <span class="block text-sm text-slate-400 uppercase">Khutbah I</span>
+            <span class="block text-2xl font-bold text-emerald-200">12:15 PM</span>
+          </div>
+          <div class="w-px h-10 bg-white/20"></div>
+          <div class="text-center">
+            <span class="block text-sm text-slate-400 uppercase">Khutbah II</span>
+            <span class="block text-2xl font-bold text-emerald-200">1:00 PM</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="w-2/3 flex flex-col justify-center animate-fade-in-right">
+      <div class="glass-panel rounded-3xl p-8 border border-white/10 shadow-2xl h-full flex flex-col justify-center">
+        
+        <div class="grid grid-cols-3 text-slate-400 uppercase tracking-widest text-sm mb-6 px-6 font-bold">
+          <div class="text-left">Prayer</div>
+          <div class="text-center">Adhan</div>
+          <div class="text-right">Iqamah</div>
+        </div>
+
+        <div class="space-y-4 flex-grow flex flex-col justify-center">
+
+          <div id="row-fajr" class="prayer-card grid grid-cols-3 items-center p-5 rounded-xl border border-transparent transition-all duration-500">
+            <div class="text-3xl font-bold font-header">Fajr</div>
+            <div id="fajrT" class="text-4xl font-mono text-center">--:--</div>
+            <div class="text-3xl font-mono text-right text-slate-400">6:15 am</div>
+          </div>
+
+          <div id="row-sunrise" class="prayer-card grid grid-cols-3 items-center p-5 rounded-xl border border-transparent transition-all duration-500 opacity-60">
+            <div class="text-2xl font-bold font-header text-amber-300">Sunrise</div>
+            <div id="sunriseT" class="text-3xl font-mono text-center text-amber-300">--:--</div>
+            <div class="text-xl font-mono text-right text-slate-500">-</div>
+          </div>
+
+          <div id="row-dhuhr" class="prayer-card grid grid-cols-3 items-center p-5 rounded-xl border border-transparent transition-all duration-500">
+            <div class="text-3xl font-bold font-header">Zuhr</div>
+            <div id="dthT" class="text-4xl font-mono text-center">--:--</div>
+            <div class="text-3xl font-mono text-right text-slate-400">12:30 pm</div>
+          </div>
+
+          <div id="row-asr" class="prayer-card grid grid-cols-3 items-center p-5 rounded-xl border border-transparent transition-all duration-500">
+            <div class="text-3xl font-bold font-header">Asr</div>
+            <div id="asrT" class="text-4xl font-mono text-center">--:--</div>
+            <div class="text-3xl font-mono text-right text-slate-400">3:00 pm</div>
+          </div>
+
+          <div id="row-maghrib" class="prayer-card grid grid-cols-3 items-center p-5 rounded-xl border border-transparent transition-all duration-500">
+            <div class="text-3xl font-bold font-header">Maghrib</div>
+            <div id="magT" class="text-4xl font-mono text-center">--:--</div>
+            <div id="magIq" class="text-3xl font-mono text-right text-slate-400">--:--</div>
+          </div>
+
+          <div id="row-isha" class="prayer-card grid grid-cols-3 items-center p-5 rounded-xl border border-transparent transition-all duration-500">
+            <div class="text-3xl font-bold font-header">Isha</div>
+            <div id="ishaT" class="text-4xl font-mono text-center">--:--</div>
+            <div class="text-3xl font-mono text-right text-slate-400">7:15 pm</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
 </body>
 </html>
