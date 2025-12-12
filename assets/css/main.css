@@ -21,9 +21,9 @@
 html, body {
   background: radial-gradient(circle at top right, #064e3b 0%, #022c22 40%, #01130d 100%);
   -webkit-font-smoothing: antialiased;
-  height: 100vh;
+  /* Mobile: allow scroll (min-h-screen). Desktop: fixed height (h-screen) */
+  min-height: 100vh;
   width: 100vw;
-  overflow: hidden;
 }
 
 /* Glassmorphism Panels */
@@ -47,6 +47,13 @@ html, body {
   box-shadow: 0 0 60px rgba(16, 185, 129, 0.15);
   transform: scale(1.02);
   z-index: 10;
+}
+
+/* Mobile active prayer scale fix */
+@media (max-width: 1024px) {
+  .prayer-card.active-prayer {
+    transform: scale(1.01);
+  }
 }
 
 .prayer-card.active-prayer .text-emerald-400\/40 {
