@@ -1,181 +1,310 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Concord UMCC Prayer Display</title>
-  
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Montserrat:wght@500;600;800;900&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="./assets/css/main.css">
-  
-  <!-- Custom JS -->
-  <script src="./assets/js/main.js" defer></script>
-</head>
-<body class="h-screen w-screen overflow-hidden bg-nature-dark text-white font-body relative selection:bg-nature-light selection:text-white">
+var timestamp = "Loading ..."
+var datestamp = "Loading ..."
 
-  <!-- ================= DECORATIONS ================= -->
-  
-  <!-- Corner Ornament: Top Left -->
-  <div class="absolute top-0 left-0 w-64 h-64 pointer-events-none opacity-30 z-0">
-    <svg viewBox="0 0 100 100" fill="none" stroke="#A7F3D0" stroke-width="1" class="w-full h-full">
-      <path d="M0 0 L40 0 Q60 0 60 20 L60 40 Q60 60 40 60 L20 60 Q0 60 0 80 Z" stroke="none" fill="url(#grad1)"/>
-      <path d="M5 5 L95 5 M5 5 L5 95" stroke-opacity="0.5" />
-      <path d="M15 15 L85 15 M15 15 L15 85" stroke-opacity="0.3" />
-      <circle cx="15" cy="15" r="3" fill="#A7F3D0" />
-      <defs>
-        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#34D399;stop-opacity:0.2" />
-          <stop offset="100%" style="stop-color:#064E3B;stop-opacity:0" />
-        </linearGradient>
-      </defs>
-    </svg>
-  </div>
+//--------------------- Copyright Block ----------------------
+/*
+PrayTimes.js: Prayer Times Calculator (ver 2.3)
+Copyright (C) 2007-2011 PrayTimes.org
+*/
 
-  <!-- Corner Ornament: Bottom Right -->
-  <div class="absolute bottom-0 right-0 w-64 h-64 pointer-events-none opacity-30 z-0 rotate-180">
-    <svg viewBox="0 0 100 100" fill="none" stroke="#A7F3D0" stroke-width="1" class="w-full h-full">
-      <path d="M0 0 L40 0 Q60 0 60 20 L60 40 Q60 60 40 60 L20 60 Q0 60 0 80 Z" stroke="none" fill="url(#grad1)"/>
-      <path d="M5 5 L95 5 M5 5 L5 95" stroke-opacity="0.5" />
-      <path d="M15 15 L85 15 M15 15 L15 85" stroke-opacity="0.3" />
-      <circle cx="15" cy="15" r="3" fill="#A7F3D0" />
-    </svg>
-  </div>
+//----------------------- PrayTimes Class ------------------------
 
-  <!-- Mosque Silhouette Watermark (Bottom Left Area) -->
-  <div class="absolute bottom-0 left-10 w-[500px] pointer-events-none opacity-10 z-0">
-     <svg viewBox="0 0 512 200" fill="#34D399" xmlns="http://www.w3.org/2000/svg">
-        <path d="M256 20 C 270 20 280 40 290 60 L 320 60 L 320 150 L 360 150 L 360 80 C 370 70 390 70 400 80 L 400 150 L 440 150 L 440 40 L 460 30 L 480 40 L 480 200 L 30 200 L 30 40 L 50 30 L 70 40 L 70 150 L 110 150 L 110 80 C 120 70 140 70 150 80 L 150 150 L 190 150 L 190 60 L 220 60 C 230 40 240 20 256 20 Z" />
-     </svg>
-  </div>
+function PrayTimes(method) {
+	var
+	timeNames = {
+		imsak    : 'Imsak', fajr : 'Fajr', sunrise : 'Sunrise', dhuhr : 'Zuhr',
+		asr      : 'Asr', sunset : 'Sunset', maghrib : 'Maghrib', isha : 'Isha', midnight : 'Midnight'
+	},
+	methods = {
+		MWL: { name: 'Muslim World League', params: { fajr: 18, isha: 17 } },
+		ISNA: { name: 'Islamic Society of North America (ISNA)', params: { fajr: 15, isha: 15 } },
+		Egypt: { name: 'Egyptian General Authority of Survey', params: { fajr: 19.5, isha: 17.5 } },
+		Makkah: { name: 'Umm Al-Qura University, Makkah', params: { fajr: 18.5, isha: '90 min' } },
+		Karachi: { name: 'University of Islamic Sciences, Karachi', params: { fajr: 18, isha: 18 } },
+		Tehran: { name: 'Institute of Geophysics, University of Tehran', params: { fajr: 17.7, isha: 14, maghrib: 4.5, midnight: 'Jafari' } },
+		Jafari: { name: 'Shia Ithna-Ashari, Leva Institute, Qum', params: { fajr: 16, isha: 14, maghrib: 4, midnight: 'Jafari' } }
+	},
+	defaultParams = { maghrib: '0 min', midnight: 'Standard' },
+	calcMethod = 'MWL',
+	setting = { imsak : '10 min', dhuhr : '0 min', asr : 'Standard', highLats : 'NightMiddle' },
+	timeFormat = '12h',
+	timeSuffixes = ['am', 'pm'],
+	invalidTime =  '-----',
+	numIterations = 1,
+	offset = {},
+	lat, lng, elv, timeZone, jDate;
 
-  <!-- Background Texture -->
-  <div class="fixed inset-0 -z-10 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] opacity-[0.03]"></div>
+	var defParams = defaultParams;
+	for (var i in methods) {
+		var params = methods[i].params;
+		for (var j in defParams) if ((typeof(params[j]) == 'undefined')) params[j] = defParams[j];
+	};
+	calcMethod = methods[method] ? method : calcMethod;
+	var params = methods[calcMethod].params;
+	for (var id in params) setting[id] = params[id];
+	for (var i in timeNames) offset[i] = 0;
 
+	return {
+        setMethod: function(method) { if (methods[method]) { this.adjust(methods[method].params); calcMethod = method; } },
+        adjust: function(params) { for (var id in params) setting[id] = params[id]; },
+        tune: function(timeOffsets) { for (var i in timeOffsets) offset[i] = timeOffsets[i]; },
+        getMethod: function() { return calcMethod; },
+        getSetting: function() { return setting; },
+        getOffsets: function() { return offset; },
+        getDefaults: function() { return methods; },
+        getTimes: function(date, coords, timezone, dst, format) {
+            lat = 1* coords[0]; lng = 1* coords[1]; elv = coords[2] ? 1* coords[2] : 0;
+            timeFormat = format || timeFormat;
+            if (date.constructor === Date) date = [date.getFullYear(), date.getMonth()+ 1, date.getDate()];
+            if (typeof(timezone) == 'undefined' || timezone == 'auto') timezone = this.getTimeZone(date);
+            if (typeof(dst) == 'undefined' || dst == 'auto') dst = this.getDst(date);
+            timeZone = 1* timezone+ (1* dst ? 1 : 0);
+            jDate = this.julian(date[0], date[1], date[2])- lng/ (15* 24);
+            const data = this.computeTimes();
+            this.times_raw = data[1];
+            return data[0];
+        },
+        nextPrayer: function(){
+            const date = new Date();
+            var hour = date.getHours();
+            var min = date.getMinutes();
+            for (var i in this.times_raw){
+                if (i === "imsak" || i === "sunrise" || i === "sunset"){ continue; }
+                var time = this.times_raw[i]
+                if (Number(time.split(":")[0]) > hour){ return i; }
+                else if (Number(time.split(":")[0]) == hour && time.split(":")[1] >= min){ return i; }
+            }
+            return "fajr";
+        },
+        getFormattedTime: function(time, format, suffixes) {
+            if (isNaN(time)) return invalidTime;
+            if (format == 'Float') return time;
+            suffixes = suffixes || timeSuffixes;
+            time = DMath.fixHour(time+ 0.5/ 60);
+            var hours = Math.floor(time);
+            var minutes = Math.floor((time- hours)* 60);
+            var suffix = (format == '12h') ? suffixes[hours < 12 ? 0 : 1] : '';
+            var hour = (format == '24h') ? this.twoDigitsFormat(hours) : ((hours+ 12 -1)% 12+ 1);
+            return hour+ ':'+ this.twoDigitsFormat(minutes)+ (suffix ? ' '+ suffix : '');
+        },
+        midDay: function(time) { return DMath.fixHour(12- this.sunPosition(jDate+ time).equation); },
+        sunAngleTime: function(angle, time, direction) {
+            var decl = this.sunPosition(jDate+ time).declination;
+            var noon = this.midDay(time);
+            var t = 1/15* DMath.arccos((-DMath.sin(angle)- DMath.sin(decl)* DMath.sin(lat))/ (DMath.cos(decl)* DMath.cos(lat)));
+            return noon+ (direction == 'ccw' ? -t : t);
+        },
+        asrTime: function(factor, time) {
+            var decl = this.sunPosition(jDate+ time).declination;
+            var angle = -DMath.arccot(factor+ DMath.tan(Math.abs(lat- decl)));
+            return this.sunAngleTime(angle, time);
+        },
+        sunPosition: function(jd) {
+            var D = jd - 2451545.0;
+            var g = DMath.fixAngle(357.529 + 0.98560028* D);
+            var q = DMath.fixAngle(280.459 + 0.98564736* D);
+            var L = DMath.fixAngle(q + 1.915* DMath.sin(g) + 0.020* DMath.sin(2*g));
+            var R = 1.00014 - 0.01671* DMath.cos(g) - 0.00014* DMath.cos(2*g);
+            var e = 23.439 - 0.00000036* D;
+            var RA = DMath.arctan2(DMath.cos(e)* DMath.sin(L), DMath.cos(L))/ 15;
+            var eqt = q/15 - DMath.fixHour(RA);
+            var decl = DMath.arcsin(DMath.sin(e)* DMath.sin(L));
+            return {declination: decl, equation: eqt};
+        },
+        julian: function(year, month, day) {
+            if (month <= 2) { year -= 1; month += 12; };
+            var A = Math.floor(year/ 100);
+            var B = 2- A+ Math.floor(A/ 4);
+            var JD = Math.floor(365.25* (year+ 4716))+ Math.floor(30.6001* (month+ 1))+ day+ B- 1524.5;
+            return JD;
+        },
+        computePrayerTimes: function(times) {
+            times = this.dayPortion(times);
+            var params  = setting;
+            var imsak   = this.sunAngleTime(this.eval(params.imsak), times.imsak, 'ccw');
+            var fajr    = this.sunAngleTime(this.eval(params.fajr), times.fajr, 'ccw');
+            var sunrise = this.sunAngleTime(this.riseSetAngle(), times.sunrise, 'ccw');
+            var dhuhr   = this.midDay(times.dhuhr);
+            var asr     = this.asrTime(this.asrFactor(params.asr), times.asr);
+            var sunset  = this.sunAngleTime(this.riseSetAngle(), times.sunset);;
+            var maghrib = this.sunAngleTime(this.eval(params.maghrib), times.maghrib);
+            var isha    = this.sunAngleTime(this.eval(params.isha), times.isha);
+            return { imsak: imsak, fajr: fajr, sunrise: sunrise, dhuhr: dhuhr, asr: asr, sunset: sunset, maghrib: maghrib, isha: isha };
+        },
+        computeTimes: function() {
+            var times = { imsak: 5, fajr: 5, sunrise: 6, dhuhr: 12, asr: 13, sunset: 18, maghrib: 18, isha: 18 };
+            for (var i=1 ; i<=numIterations ; i++) times = this.computePrayerTimes(times);
+            times = this.adjustTimes(times);
+            times.midnight = (setting.midnight == 'Jafari') ? times.sunset+ this.timeDiff(times.sunset, times.fajr)/ 2 : times.sunset+ this.timeDiff(times.sunset, times.sunrise)/ 2;
+            times = this.tuneTimes(times);
+            return this.modifyFormats(times);
+        },
+        adjustTimes: function(times) {
+            var params = setting;
+            for (var i in times) times[i] += timeZone- lng/ 15;
+            if (params.highLats != 'None') times = this.adjustHighLats(times);
+            if (this.isMin(params.imsak)) times.imsak = times.fajr- this.eval(params.imsak)/ 60;
+            if (this.isMin(params.maghrib)) times.maghrib = times.sunset+ this.eval(params.maghrib)/ 60;
+            if (this.isMin(params.isha)) times.isha = times.maghrib+ this.eval(params.isha)/ 60;
+            times.dhuhr += this.eval(params.dhuhr)/ 60;
+            return times;
+        },
+        asrFactor: function(asrParam) { var factor = {Standard: 1, Hanafi: 2}[asrParam]; return factor || this.eval(asrParam); },
+        riseSetAngle: function() { var angle = 0.0347* Math.sqrt(elv); return 0.833+ angle; },
+        tuneTimes: function(times) { for (var i in times) times[i] += offset[i]/ 60; return times; },
+        modifyFormats: function(times) {
+            var times_raw = { imsak: 5, fajr: 5, sunrise: 6, dhuhr: 12, asr: 13, sunset: 18, maghrib: 18, isha: 18 };
+            for (var i in times){ times_raw[i] = this.getFormattedTime(times[i], "24h"); times[i] = this.getFormattedTime(times[i], timeFormat); }
+            return [times, times_raw];
+        },
+        adjustHighLats: function(times) {
+            var params = setting;
+            var nightTime = this.timeDiff(times.sunset, times.sunrise);
+            times.imsak = this.adjustHLTime(times.imsak, times.sunrise, this.eval(params.imsak), nightTime, 'ccw');
+            times.fajr  = this.adjustHLTime(times.fajr, times.sunrise, this.eval(params.fajr), nightTime, 'ccw');
+            times.isha  = this.adjustHLTime(times.isha, times.sunset, this.eval(params.isha), nightTime);
+            times.maghrib = this.adjustHLTime(times.maghrib, times.sunset, this.eval(params.maghrib), nightTime);
+            return times;
+        },
+        adjustHLTime: function(time, base, angle, night, direction) {
+            var portion = this.nightPortion(angle, night);
+            var timeDiff = (direction == 'ccw') ? this.timeDiff(time, base): this.timeDiff(base, time);
+            if (isNaN(time) || timeDiff > portion) time = base+ (direction == 'ccw' ? -portion : portion);
+            return time;
+        },
+        nightPortion: function(angle, night) {
+            var method = setting.highLats;
+            var portion = 1/2;
+            if (method == 'AngleBased') portion = 1/60* angle;
+            if (method == 'OneSeventh') portion = 1/7;
+            return portion* night;
+        },
+        dayPortion: function(times) { for (var i in times) times[i] /= 24; return times; },
+        getTimeZone: function(date) {
+            var year = date[0];
+            var t1 = this.gmtOffset([year, 0, 1]);
+            var t2 = this.gmtOffset([year, 6, 1]);
+            return Math.min(t1, t2);
+        },
+        getDst: function(date) { return 1* (this.gmtOffset(date) != this.getTimeZone(date)); },
+        gmtOffset: function(date) {
+            var localDate = new Date(date[0], date[1]- 1, date[2], 12, 0, 0, 0);
+            var GMTString = localDate.toGMTString();
+            var GMTDate = new Date(GMTString.substring(0, GMTString.lastIndexOf(' ')- 1));
+            var hoursDiff = (localDate- GMTDate) / (1000* 60* 60);
+            return hoursDiff;
+        },
+        eval: function(str) { return 1* (str+ '').split(/[^0-9.+-]/)[0]; },
+        isMin: function(arg) { return (arg+ '').indexOf('min') != -1; },
+        timeDiff: function(time1, time2) { return DMath.fixHour(time2- time1); },
+        twoDigitsFormat: function(num) { return (num <10) ? '0'+ num : num; }
+    }
+}
+var DMath = {
+	dtr: function(d) { return (d * Math.PI) / 180.0; },
+	rtd: function(r) { return (r * 180.0) / Math.PI; },
+	sin: function(d) { return Math.sin(this.dtr(d)); },
+	cos: function(d) { return Math.cos(this.dtr(d)); },
+	tan: function(d) { return Math.tan(this.dtr(d)); },
+	arcsin: function(d) { return this.rtd(Math.asin(d)); },
+	arccos: function(d) { return this.rtd(Math.acos(d)); },
+	arctan: function(d) { return this.rtd(Math.atan(d)); },
+	arccot: function(x) { return this.rtd(Math.atan(1/x)); },
+	arctan2: function(y, x) { return this.rtd(Math.atan2(y, x)); },
+	fixAngle: function(a) { return this.fix(a, 360); },
+	fixHour:  function(a) { return this.fix(a, 24 ); },
+	fix: function(a, b) { a = a- b* (Math.floor(a/ b)); return (a < 0) ? a+ b : a; }
+}
 
-  <!-- ================= MAIN CONTENT ================= -->
+//---------------------- Init Object -----------------------
 
-  <main class="flex h-full w-full p-10 gap-10 relative z-10">
+function getNow() {
+    const today = new Date();
+	
+	// Calculation Logic
+	var d = new Date();
+	var daysToAdd = 5 - d.getDay(); 
+	if (daysToAdd <= 0) { daysToAdd += 7; }
+	d.setDate(d.getDate() + daysToAdd);
+	
+	var tmr = new Date();
+	tmr.setDate(tmr.getDate() + 1);
+	var tmr_PT = new PrayTimes('Makkah');
+	var tmr_times = tmr_PT.getTimes(tmr, [35.227, -80.843], -5);
+
+	var PT = new PrayTimes('Makkah');
+	var times = PT.getTimes(today, [35.227, -80.843], -5);
+	
+	// Date & Time Formatting
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    this.datestamp = today.toLocaleDateString('en-US', options);
+
+    let hours = today.getHours();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const minutes = today.getMinutes().toString().padStart(2, '0');
+    const seconds = today.getSeconds().toString().padStart(2, '0');
+    // Simplified time string without spans inside the logic to avoid breaking animations or simple text replacements if used elsewhere
+    const time = hours + ":" + minutes + ":" + seconds + " <span class='text-4xl align-top opacity-80'>" + ampm + "</span>";
+    this.timestamp = time;
+	
+	const next_p = PT.nextPrayer();
+	var prayer = times[next_p];
+	const formatedPrayer = next_p.charAt(0).toUpperCase() + next_p.slice(1);
+
+	var isha_date = new Date(today);
+	isha_date.setHours(Number(PT.times_raw["isha"].split(":")[0]));
+	isha_date.setMinutes(Number(PT.times_raw["isha"].split(":")[1]));
+	
+	if (next_p === "fajr" && isha_date > today){
+			document.getElementById("cur_pray").innerHTML = formatedPrayer + "&nbsp;" + times[next_p];
+	} else {
+			document.getElementById("cur_pray").innerHTML = formatedPrayer + "&nbsp;" + tmr_times[next_p];
+			prayer = tmr_times[next_p];
+	}
+
+    // Update Text Elements
+    document.getElementById("timestamp").innerHTML = this.timestamp;
+    document.getElementById("datestamp").innerHTML = this.datestamp;
+	
+	document.getElementById("fajrT").innerHTML = times["fajr"];
+	document.getElementById("sunriseT").innerHTML = times["sunrise"];
+	document.getElementById("dthT").innerHTML = times["dhuhr"];
+	document.getElementById("asrT").innerHTML = times["asr"];
+	document.getElementById("magT").innerHTML = times["maghrib"];
+	document.getElementById("magIq").innerHTML = times["maghrib"] + " + 5";
+	document.getElementById("ishaT").innerHTML = times["isha"];
+
+    // ----------------------------------------------------------------
+    // NEW LOGIC: Highlight the Active Prayer Card
+    // ----------------------------------------------------------------
     
-    <!-- LEFT PANEL: Dashboard Info -->
-    <section class="w-5/12 flex flex-col gap-8 animate-fade-in-left">
-      
-      <!-- Top Card: Time & Next Prayer -->
-      <div class="glass-panel flex-grow flex flex-col justify-between items-center rounded-[2.5rem] p-10 text-center border border-white/10 shadow-2xl relative overflow-hidden group">
-        
-        <!-- Subtle glow effect behind clock -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+    // Map prayer keys to HTML IDs of the rows
+    const prayerMap = {
+        'fajr': 'row-fajr',
+        'sunrise': 'row-sunrise',
+        'dhuhr': 'row-dhuhr',
+        'asr': 'row-asr',
+        'maghrib': 'row-maghrib',
+        'isha': 'row-isha'
+    };
 
-        <!-- Header -->
-        <div class="w-full border-b border-white/5 pb-6">
-            <h1 class="text-4xl font-header font-black tracking-[0.2em] uppercase text-emerald-100/90 drop-shadow-md">Concord UMCC</h1>
-        </div>
+    // Remove 'active-prayer' class from all rows
+    Object.values(prayerMap).forEach(rowId => {
+        const row = document.getElementById(rowId);
+        if(row) row.classList.remove('active-prayer');
+    });
 
-        <!-- Clock -->
-        <div class="py-10 flex flex-col items-center justify-center">
-            <div id="timestamp" class="text-[7rem] font-header font-black text-white tracking-tight leading-none drop-shadow-2xl">--:--</div>
-            <div id="datestamp" class="text-3xl text-emerald-200/80 font-bold mt-4 uppercase tracking-widest font-body">Loading...</div>
-        </div>
-        
-        <!-- Next Prayer Indicator -->
-        <div class="w-full border-t border-white/5 pt-8 bg-black/10 -mx-10 px-10 pb-4 rounded-b-[2rem]">
-            <h3 class="text-xl uppercase font-bold text-emerald-400 mb-2 tracking-[0.3em]">Next Prayer</h3>
-            <div id="cur_pray" class="text-6xl font-header font-black text-white drop-shadow-lg leading-tight">Loading...</div>
-        </div>
-      </div>
+    // Add 'active-prayer' to the current/next prayer
+    if (prayerMap[next_p]) {
+        const activeRow = document.getElementById(prayerMap[next_p]);
+        if (activeRow) activeRow.classList.add('active-prayer');
+    }
 
-      <!-- Bottom Card: Jumu'ah Schedule (Maximized) -->
-      <div class="glass-panel h-auto rounded-[2.5rem] p-8 border border-white/10 flex flex-col justify-center bg-nature-darker/40 backdrop-blur-xl">
-        <h3 class="text-center text-2xl font-black text-emerald-500/80 uppercase tracking-[0.25em] mb-8 border-b border-emerald-500/10 pb-4 mx-4">Jumu'ah Schedule</h3>
-        
-        <div class="flex justify-around items-center gap-4">
-          <!-- Khutbah 1 -->
-          <div class="text-center flex-1 border-r border-white/5 py-2">
-            <span class="block text-lg text-emerald-200/60 font-bold uppercase tracking-wider mb-2">Khutbah I</span>
-            <span class="block text-6xl font-header font-black text-white drop-shadow-lg">12:15</span>
-            <span class="text-xl font-bold text-emerald-500 block mt-1">PM</span>
-          </div>
-          
-          <!-- Khutbah 2 -->
-          <div class="text-center flex-1 py-2">
-            <span class="block text-lg text-emerald-200/60 font-bold uppercase tracking-wider mb-2">Khutbah II</span>
-            <span class="block text-6xl font-header font-black text-white drop-shadow-lg">1:00</span>
-            <span class="text-xl font-bold text-emerald-500 block mt-1">PM</span>
-          </div>
-        </div>
-      </div>
+	return;
+}
 
-    </section>
-
-    <!-- RIGHT PANEL: Prayer Times List -->
-    <section class="w-7/12 flex flex-col justify-center animate-fade-in-right h-full">
-      <div class="glass-panel rounded-[2.5rem] p-10 border border-white/10 shadow-2xl h-full flex flex-col relative overflow-hidden">
-        
-        <!-- Decoration inside list panel -->
-        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[80px] rounded-full pointer-events-none"></div>
-
-        <!-- Grid Header -->
-        <div class="grid grid-cols-3 text-emerald-500/50 uppercase tracking-[0.2em] text-sm font-black mb-8 px-8">
-          <div class="text-left">Prayer</div>
-          <div class="text-center">Adhan</div>
-          <div class="text-right">Iqamah</div>
-        </div>
-
-        <!-- Prayer Rows Container -->
-        <div class="flex-grow flex flex-col justify-between gap-6">
-
-          <!-- Fajr -->
-          <div id="row-fajr" class="prayer-card grid grid-cols-3 items-center px-8 py-6 rounded-2xl border border-transparent transition-all duration-500 group">
-            <div class="text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Fajr</div>
-            <div id="fajrT" class="text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div class="text-4xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">6:15</div>
-          </div>
-
-          <!-- Sunrise -->
-          <div id="row-sunrise" class="prayer-card grid grid-cols-3 items-center px-8 py-5 rounded-2xl border border-transparent transition-all duration-500 opacity-40 bg-black/30 hover:opacity-60">
-            <div class="text-3xl font-bold font-header text-yellow-100">Sunrise</div>
-            <div id="sunriseT" class="text-4xl font-mono font-bold text-center text-yellow-100">--:--</div>
-            <div class="text-3xl font-mono font-bold text-right text-yellow-100/20">-</div>
-          </div>
-
-          <!-- Dhuhr -->
-          <div id="row-dhuhr" class="prayer-card grid grid-cols-3 items-center px-8 py-6 rounded-2xl border border-transparent transition-all duration-500 group">
-            <div class="text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Zuhr</div>
-            <div id="dthT" class="text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div class="text-4xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">12:30</div>
-          </div>
-
-          <!-- Asr -->
-          <div id="row-asr" class="prayer-card grid grid-cols-3 items-center px-8 py-6 rounded-2xl border border-transparent transition-all duration-500 group">
-            <div class="text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Asr</div>
-            <div id="asrT" class="text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div class="text-4xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">3:00</div>
-          </div>
-
-          <!-- Maghrib -->
-          <div id="row-maghrib" class="prayer-card grid grid-cols-3 items-center px-8 py-6 rounded-2xl border border-transparent transition-all duration-500 group">
-            <div class="text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Maghrib</div>
-            <div id="magT" class="text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div id="magIq" class="text-4xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">--:--</div>
-          </div>
-
-          <!-- Isha -->
-          <div id="row-isha" class="prayer-card grid grid-cols-3 items-center px-8 py-6 rounded-2xl border border-transparent transition-all duration-500 group">
-            <div class="text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Isha</div>
-            <div id="ishaT" class="text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div class="text-4xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">7:15</div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-  </main>
-</body>
-</html>
+// Start
+setInterval(getNow, 1000);
+getNow(); // Run immediately on load
