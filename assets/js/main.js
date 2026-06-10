@@ -1,5 +1,60 @@
 var timestamp = "Loading ..."
 var datestamp = "Loading ..."
+var pageVersionSignature = null;
+var isCheckingForPageUpdate = false;
+var PAGE_UPDATE_POLL_INTERVAL_MS = 60000;
+
+function hashText(value) {
+    var hash = 5381;
+    for (var i = 0; i < value.length; i++) {
+        hash = ((hash << 5) + hash) + value.charCodeAt(i);
+    }
+    return hash.toString();
+}
+
+function getPageUpdateUrl() {
+    var url = new URL(window.location.href);
+    url.hash = '';
+    url.searchParams.set('_pageUpdateCheck', Date.now().toString());
+    return url.toString();
+}
+
+async function checkForPageUpdate() {
+    if (!window.fetch || !window.location.protocol.startsWith('http') || isCheckingForPageUpdate) {
+        return;
+    }
+
+    isCheckingForPageUpdate = true;
+
+    try {
+        var response = await fetch(getPageUpdateUrl(), { cache: 'no-store' });
+        if (!response.ok) {
+            return;
+        }
+
+        var nextSignature = hashText(await response.text());
+
+        if (pageVersionSignature && pageVersionSignature !== nextSignature) {
+            window.location.reload();
+            return;
+        }
+
+        pageVersionSignature = nextSignature;
+    } catch (error) {
+        // Ignore transient network/cache issues and try again on the next poll.
+    } finally {
+        isCheckingForPageUpdate = false;
+    }
+}
+
+function startPageUpdatePolling() {
+    if (!window.location.protocol.startsWith('http')) {
+        return;
+    }
+
+    checkForPageUpdate();
+    setInterval(checkForPageUpdate, PAGE_UPDATE_POLL_INTERVAL_MS);
+}
 
 //--------------------- Copyright Block ----------------------
 /*
@@ -323,3 +378,4 @@ function getNow() {
 // Start
 setInterval(getNow, 1000);
 getNow(); // Run immediately on load
+startPageUpdatePolling();
