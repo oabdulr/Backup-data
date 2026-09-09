@@ -2,204 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Concord UMCC Prayer Display</title>
-  
-  <!-- Fonts -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142d27">
+  <meta name="description" content="Daily prayer times and congregation schedules for Concord UMCC.">
+  <title>Prayer Times · Concord UMCC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Montserrat:wght@500;600;800;900&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Custom CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/main.css">
-</head>
-<body class="overflow-y-auto lg:overflow-hidden bg-nature-dark text-white font-body relative selection:bg-nature-light selection:text-white">
-
-  <!-- ======================================================= -->
-  <!-- CONFIGURATION: MANAGE PRAYER TIMES HERE                -->
-  <!-- ======================================================= -->
-  <script>
-    // EDIT THESE VALUES TO CHANGE THE IQAMAH TIMES
-    var iqamah_fajr = "6:00";
-    var iqamah_zuhr = "1:30";
-    var iqamah_asr = "5:15";
-    var iqamah_isha = "9:15";
-    
-    // For Maghrib, enter the minutes to add (e.g., "+ 5")
-    var iqamah_maghrib_added_minutes = "+ 5";
-  </script>
-  <!-- ======================================================= -->
-
-  <!-- ================= DECORATIONS ================= -->
-  
-  <!-- Corner Ornament: Top Left (Changed to FIXED) -->
-  <div class="fixed top-0 left-0 w-32 h-32 lg:w-64 lg:h-64 pointer-events-none opacity-30 z-0">
-    <svg viewBox="0 0 100 100" fill="none" stroke="#A7F3D0" stroke-width="1" class="w-full h-full">
-      <path d="M0 0 L40 0 Q60 0 60 20 L60 40 Q60 60 40 60 L20 60 Q0 60 0 80 Z" stroke="none" fill="url(#grad1)"/>
-      <path d="M5 5 L95 5 M5 5 L5 95" stroke-opacity="0.5" />
-      <path d="M15 15 L85 15 M15 15 L15 85" stroke-opacity="0.3" />
-      <circle cx="15" cy="15" r="3" fill="#A7F3D0" />
-      <defs>
-        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#34D399;stop-opacity:0.2" />
-          <stop offset="100%" style="stop-color:#064E3B;stop-opacity:0" />
-        </linearGradient>
-      </defs>
-    </svg>
-  </div>
-
-  <!-- Corner Ornament: Bottom Right (Changed to FIXED) -->
-  <div class="fixed bottom-0 right-0 w-32 h-32 lg:w-64 lg:h-64 pointer-events-none opacity-30 z-0 rotate-180">
-    <svg viewBox="0 0 100 100" fill="none" stroke="#A7F3D0" stroke-width="1" class="w-full h-full">
-      <!-- Duplicated defs to ensure gradient renders correctly in all browsers -->
-      <defs>
-        <linearGradient id="grad1-bottom" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#34D399;stop-opacity:0.2" />
-          <stop offset="100%" style="stop-color:#064E3B;stop-opacity:0" />
-        </linearGradient>
-      </defs>
-      <path d="M0 0 L40 0 Q60 0 60 20 L60 40 Q60 60 40 60 L20 60 Q0 60 0 80 Z" stroke="none" fill="url(#grad1-bottom)"/>
-      <path d="M5 5 L95 5 M5 5 L5 95" stroke-opacity="0.5" />
-      <path d="M15 15 L85 15 M15 15 L15 85" stroke-opacity="0.3" />
-      <circle cx="15" cy="15" r="3" fill="#A7F3D0" />
-    </svg>
-  </div>
-
-  <!-- Mosque Silhouette Watermark (Bottom Left Area) -->
-  <div class="absolute bottom-0 left-0 w-full lg:w-[500px] pointer-events-none opacity-10 z-0 flex justify-center lg:justify-start">
-     <svg viewBox="0 0 512 200" fill="#34D399" xmlns="http://www.w3.org/2000/svg" class="w-[300px] lg:w-full">
-        <path d="M256 20 C 270 20 280 40 290 60 L 320 60 L 320 150 L 360 150 L 360 80 C 370 70 390 70 400 80 L 400 150 L 440 150 L 440 40 L 460 30 L 480 40 L 480 200 L 30 200 L 30 40 L 50 30 L 70 40 L 70 150 L 110 150 L 110 80 C 120 70 140 70 150 80 L 150 150 L 190 150 L 190 60 L 220 60 C 230 40 240 20 256 20 Z" />
-     </svg>
-  </div>
-
-  <!-- Background Texture -->
-  <div class="fixed inset-0 -z-10 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] opacity-[0.03]"></div>
-
-
-  <!-- ================= MAIN CONTENT ================= -->
-
-  <!-- Changed to Flex Column on Mobile, Row on Desktop -->
-  <main class="flex flex-col md:flex-row h-full w-full p-4 lg:p-10 gap-6 md:gap-10 relative z-10">
-    
-    <!-- LEFT PANEL: Dashboard Info -->
-    <section class="w-full md:w-5/12 flex flex-col gap-6 lg:gap-8 animate-fade-in-left order-1">
-      
-      <!-- Top Card: Time & Next Prayer -->
-      <div class="glass-panel flex-grow flex flex-col justify-between items-center rounded-3xl lg:rounded-[2.5rem] p-6 lg:p-10 text-center border border-white/10 shadow-2xl relative overflow-hidden group">
-        
-        <!-- Subtle glow effect behind clock -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 lg:w-64 lg:h-64 bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none"></div>
-
-        <!-- Header -->
-        <div class="w-full border-b border-white/5 pb-4 lg:pb-6">
-            <h1 class="text-2xl lg:text-4xl font-header font-black tracking-[0.2em] uppercase text-emerald-100/90 drop-shadow-md">Concord UMCC</h1>
-        </div>
-
-        <!-- Clock -->
-        <div class="py-6 lg:py-10 flex flex-col items-center justify-center">
-            <!-- Made text responsive: text-6xl on mobile -> text-7rem on desktop -->
-            <div id="timestamp" class="text-6xl lg:text-[7rem] font-header font-black text-white tracking-tight leading-none drop-shadow-2xl">--:--</div>
-            <div id="datestamp" class="text-lg lg:text-3xl text-emerald-200/80 font-bold mt-2 lg:mt-4 uppercase tracking-widest font-body">Loading...</div>
-        </div>
-        
-        <!-- Next Prayer Indicator -->
-        <div class="w-full border-t border-white/5 pt-6 lg:pt-8 bg-black/10 -mx-6 lg:-mx-10 px-6 lg:px-10 pb-4 rounded-b-[2rem]">
-            <h3 class="text-sm lg:text-xl uppercase font-bold text-emerald-400 mb-2 tracking-[0.3em]">Next Prayer</h3>
-            <div id="cur_pray" class="text-4xl lg:text-6xl font-header font-black text-white drop-shadow-lg leading-tight">Loading...</div>
-        </div>
-      </div>
-
-      <!-- Bottom Card: Jumu'ah Schedule (Maximized) -->
-      <div class="glass-panel h-auto rounded-3xl lg:rounded-[2.5rem] p-6 lg:p-8 border border-white/10 flex flex-col justify-center bg-nature-darker/40 backdrop-blur-xl">
-        <h3 class="text-center text-lg lg:text-2xl font-black text-emerald-500/80 uppercase tracking-[0.25em] mb-4 lg:mb-8 border-b border-emerald-500/10 pb-4 mx-4">Jumu'ah Schedule</h3>
-        
-        <div class="flex flex-row justify-around items-center gap-4">
-          <!-- Khutbah 1 -->
-          <div class="text-center flex-1 border-r border-white/5 py-2">
-            <span class="block text-xs lg:text-lg text-emerald-200/60 font-bold uppercase tracking-wider mb-1 lg:mb-2">Khutbah I</span>
-            <span class="block text-3xl lg:text-6xl font-header font-black text-white drop-shadow-lg">1:15</span>
-            <span class="text-sm lg:text-xl font-bold text-emerald-500 block mt-1">PM</span>
-          </div>
-          
-          <!-- Khutbah 2 -->
-          <div class="text-center flex-1 py-2">
-            <span class="block text-xs lg:text-lg text-emerald-200/60 font-bold uppercase tracking-wider mb-1 lg:mb-2">Khutbah II</span>
-            <span class="block text-3xl lg:text-6xl font-header font-black text-white drop-shadow-lg">2:00</span>
-            <span class="text-sm lg:text-xl font-bold text-emerald-500 block mt-1">PM</span>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- RIGHT PANEL: Prayer Times List -->
-    <section class="w-full md:w-7/12 flex flex-col justify-center animate-fade-in-right h-full order-2">
-      <div class="glass-panel rounded-3xl lg:rounded-[2.5rem] p-4 lg:p-10 border border-white/10 shadow-2xl h-full flex flex-col relative overflow-hidden">
-        
-        <!-- Decoration inside list panel -->
-        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[80px] rounded-full pointer-events-none"></div>
-
-        <!-- Grid Header -->
-        <div class="grid grid-cols-3 text-emerald-500/50 uppercase tracking-[0.2em] text-[10px] lg:text-sm font-black mb-4 lg:mb-8 px-2 lg:px-8">
-          <div class="text-left">Prayer</div>
-          <div class="text-center">Adhan</div>
-          <div class="text-right">Iqamah</div>
-        </div>
-
-        <!-- Prayer Rows Container -->
-        <div class="flex-grow flex flex-col justify-between gap-3 lg:gap-6">
-
-          <!-- Fajr -->
-          <div id="row-fajr" class="prayer-card grid grid-cols-3 items-center px-4 lg:px-8 py-4 lg:py-6 rounded-2xl border border-transparent transition-all duration-500 group">
-            <div class="text-2xl lg:text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Fajr</div>
-            <div id="fajrT" class="text-2xl lg:text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div id="fajrIq" class="text-3xl lg:text-6xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">5:00</div>
-          </div>
-
-          <!-- Sunrise -->
-          <div id="row-sunrise" class="prayer-card grid grid-cols-3 items-center px-4 lg:px-8 py-3 lg:py-5 rounded-2xl border border-transparent transition-all duration-500 opacity-40 bg-black/30 hover:opacity-60">
-            <div class="text-xl lg:text-3xl font-bold font-header text-yellow-100">Sunrise</div>
-            <div id="sunriseT" class="text-xl lg:text-4xl font-mono font-bold text-center text-yellow-100">--:--</div>
-            <div class="text-xl lg:text-4xl font-mono font-bold text-right text-yellow-100/20">-</div>
-          </div>
-
-          <!-- Dhuhr -->
-          <div id="row-dhuhr" class="prayer-card grid grid-cols-3 items-center px-4 lg:px-8 py-4 lg:py-6 rounded-2xl border border-transparent transition-all duration-500 group">
-            <div class="text-2xl lg:text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Zuhr</div>
-            <div id="dthT" class="text-2xl lg:text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div id="dhuhrIq" class="text-3xl lg:text-6xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">1:45</div>
-          </div>
-
-          <!-- Asr -->
-          <div id="row-asr" class="prayer-card grid grid-cols-3 items-center px-4 lg:px-8 py-4 lg:py-6 rounded-2xl border border-transparent transition-all duration-500 group">
-            <div class="text-2xl lg:text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Asr</div>
-            <div id="asrT" class="text-2xl lg:text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div id="asrIq" class="text-3xl lg:text-6xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">5:30</div>
-          </div>
-
-          <!-- Maghrib -->
-          <div id="row-maghrib" class="prayer-card grid grid-cols-3 items-center px-4 lg:px-8 py-4 lg:py-6 rounded-2xl border border-transparent transition-all duration-500 group">
-            <div class="text-2xl lg:text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Maghrib</div>
-            <div id="magT" class="text-2xl lg:text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div id="magIq" class="text-3xl lg:text-6xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">--:--</div>
-          </div>
-
-          <!-- Isha -->
-          <div id="row-isha" class="prayer-card grid grid-cols-3 items-center px-4 lg:px-8 py-4 lg:py-6 rounded-2xl border border-transparent transition-all duration-500 group">
-            <div class="text-2xl lg:text-5xl font-black font-header text-emerald-50 group-hover:translate-x-2 transition-transform">Isha</div>
-            <div id="ishaT" class="text-2xl lg:text-5xl font-mono font-bold text-center text-white/90">--:--</div>
-            <div id="ishaIq" class="text-3xl lg:text-6xl font-mono font-bold text-right text-emerald-400/40 group-hover:text-emerald-400/60 transition-colors">10:15</div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Custom JS -->
+  <script src="./assets/js/config.js" defer></script>
+  <script src="./assets/js/pray-times.js" defer></script>
   <script src="./assets/js/main.js" defer></script>
+</head>
+<body>
+  <div class="display">
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Concord UMCC home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M8 31V18l12-10 12 10v13M15 31V21a5 5 0 0 1 10 0v10M5 31h30M20 8V4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span>Concord UMCC<small>A place for prayer. A place for community.</small></span>
+      </a>
+      <span class="location"><span class="status-dot"></span>Concord, North Carolina</span>
+    </header>
+    <main class="dashboard">
+      <section class="overview" aria-label="Clock and next prayer">
+        <div class="clock-block">
+          <p class="eyebrow">Peace be upon you</p>
+          <div class="clock"><span id="timestamp">--:--</span><span class="clock-detail"><span id="period">--</span><span id="seconds">00</span></span></div>
+          <p id="datestamp" class="date">Loading date…</p>
+          <p class="timezone">Eastern time · <span id="timezone-name">America/New_York</span></p>
+        </div>
+        <div class="next-card">
+          <div class="next-top"><span class="eyebrow">Next prayer</span><span id="next-day" class="day-tag">Today</span></div>
+          <div class="next-title"><h1 id="next-name">—</h1><span class="direction" aria-hidden="true">↗</span></div>
+          <p class="next-time">Adhan at <strong id="next-time">--:--</strong></p>
+          <div class="countdown-wrap"><span>Begins in</span><span id="countdown" class="countdown">--:--:--</span></div>
+          <div class="progress-track" aria-hidden="true"><div id="prayer-progress"></div></div>
+          <svg class="arch" viewBox="0 0 200 280" fill="none" aria-hidden="true"><path d="M15 280V130C15 70 75 50 100 15c25 35 85 55 85 115v150M35 280V135c0-48 45-65 65-93 20 28 65 45 65 93v145M55 280V140c0-35 30-50 45-70 15 20 45 35 45 70v140" stroke="currentColor"/></svg>
+        </div>
+        <section class="friday-card" aria-labelledby="friday-title">
+          <div class="friday-heading"><h2 id="friday-title">Jumu’ah</h2><span class="eyebrow">Every Friday</span></div>
+          <div class="khutbahs"><div><span>First khutbah</span><p>1:15 <small>PM</small></p></div><div><span>Second khutbah</span><p>2:00 <small>PM</small></p></div></div>
+        </section>
+      </section>
+      <section class="schedule" aria-labelledby="schedule-title">
+        <div class="schedule-heading"><div><p class="eyebrow">Your daily rhythm</p><h2 id="schedule-title">Prayer times</h2></div><span class="today-tag">Today</span></div>
+        <table><thead><tr><th scope="col">Prayer</th><th scope="col">Adhan</th><th scope="col">Iqamah</th></tr></thead><tbody id="prayer-rows"></tbody></table>
+        <div class="schedule-note"><span class="note-icon" aria-hidden="true">i</span><p>Maghrib iqamah is <span id="maghrib-offset">5</span> minutes after adhan.</p></div>
+      </section>
+    </main>
+    <footer><span>Come together in prayer.</span><span>Please silence your phone <span aria-hidden="true">✧</span></span></footer>
+    <noscript><p>Please enable JavaScript to display the live prayer schedule.</p></noscript>
+  </div>
 </body>
 </html>
