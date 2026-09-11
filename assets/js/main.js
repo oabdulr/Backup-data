@@ -57,7 +57,7 @@
     const date = [noon.getUTCFullYear(), noon.getUTCMonth() + 1, noon.getUTCDate()];
     const offset = offsetAt(noon);
     const times = calculator.getTimes(date, PRAYER_CONFIG.coordinates, offset, 0, '24h');
-    const events = prayers.filter(prayer => prayer.key !== 'sunrise').map(prayer => {
+    const events = prayers.map(prayer => {
       const [hour, minute] = times[prayer.key].split(':').map(Number);
       return { ...prayer, time: times[prayer.key], at: Date.UTC(date[0], date[1] - 1, date[2], hour, minute) - offset * 3_600_000 };
     });
@@ -75,10 +75,13 @@
       ...calculateDay(year, month, day + 1).events,
     ];
     elements['prayer-rows'].innerHTML = prayers.map(({ key, name, caption }) => {
+      if (key === 'sunrise') {
+        return `<tr id="row-${key}" class="sunrise"><td><span class="prayer-label">${name}</span><span class="prayer-caption">${caption}</span></td><td class="sunrise-time" colspan="2">${timeMarkup(today.times[key])}</td></tr>`;
+      }
       const iqamah = key === 'maghrib'
         ? addMinutes(today.times.maghrib, PRAYER_CONFIG.maghribOffset)
         : PRAYER_CONFIG.iqamah[key];
-      return `<tr id="row-${key}" class="${key === 'sunrise' ? 'sunrise' : ''}"><td><span class="prayer-label">${name}</span><span class="prayer-caption">${caption}</span></td><td>${timeMarkup(today.times[key])}</td><td>${iqamah ? timeMarkup(iqamah) : '—'}</td></tr>`;
+      return `<tr id="row-${key}"><td><span class="prayer-label">${name}</span><span class="prayer-caption">${caption}</span></td><td>${timeMarkup(today.times[key])}</td><td>${timeMarkup(iqamah)}</td></tr>`;
     }).join('');
     elements['maghrib-offset'].textContent = PRAYER_CONFIG.maghribOffset;
     highlightedPrayer = '';
@@ -112,6 +115,7 @@
       elements['next-name'].textContent = next.name;
       const time = formatTime(next.time);
       elements['next-time'].textContent = `${time.time} ${time.period}`;
+      elements['next-time-label'].textContent = next.key === 'sunrise' ? 'Sunrise at' : 'Adhan at';
       const isTomorrow = dateFormatter.format(new Date(next.at)) !== dateFormatter.format(now);
       elements['next-day'].textContent = isTomorrow ? 'Tomorrow' : 'Today';
       document.querySelectorAll('tbody tr').forEach(row => {

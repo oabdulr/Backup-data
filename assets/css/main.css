@@ -437,9 +437,13 @@ td:last-child {
 
 .sunrise td {
   color: #747d6d;
-  font-size: 19px;
   padding-top: 12px;
   padding-bottom: 12px;
+}
+
+.sunrise .sunrise-time {
+  text-align: center;
+  font-weight: 500;
 }
 
 .schedule-note {
@@ -597,7 +601,10 @@ footer > span:last-child span {
 @media (min-width: 900px) and (orientation: landscape) {
   .display {
     max-width: none;
-    min-height: 100svh;
+    height: 100vh;
+    min-height: 100vh;
+    height: 100dvh;
+    min-height: 100dvh;
     padding: 2.5vh 2vw;
   }
   .site-header {
@@ -763,6 +770,9 @@ footer > span:last-child span {
     border-radius: 12px;
     padding: 1.4vh .6vw;
   }
+  tbody tr > td:first-child {
+    flex: 0 0 auto;
+  }
   td, td:first-child, .sunrise td {
     display: block;
     border: 0;
@@ -783,6 +793,14 @@ footer > span:last-child span {
   td:nth-child(2), td:last-child {
     margin-top: 1.5vh;
   }
+  tbody tr > td:nth-child(2), tbody tr > td:last-child {
+    display: flex;
+    flex: 1 1 0;
+    min-height: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
   td:nth-child(2)::before, td:last-child::before {
     display: block;
     margin-bottom: .4vh;
@@ -800,6 +818,10 @@ footer > span:last-child span {
   }
   .sunrise td:nth-child(2)::before {
     content: 'Sunrise';
+  }
+  .sunrise .sunrise-time {
+    text-align: center;
+    font-weight: 700;
   }
   td small {
     display: inline;
